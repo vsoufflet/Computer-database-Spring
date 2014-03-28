@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import com.excilys.computerdatabase.domain.Computer;
 import com.excilys.computerdatabase.domain.ComputerDTO;
 import com.excilys.computerdatabase.domain.ComputerValidator;
@@ -20,8 +23,12 @@ import com.excilys.computerdatabase.service.ComputerServiceImpl;
 @WebServlet("/EditComputerServlet")
 public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	ComputerServiceImpl computerService = ComputerServiceImpl.getInstance();
-	ComputerMapper cm = new ComputerMapper();
+
+	@Autowired
+	ComputerServiceImpl computerService;
+	@Autowired
+	ComputerMapper cm;
+
 	ComputerValidator cv = new ComputerValidator();
 
 	/**
@@ -29,6 +36,13 @@ public class EditComputerServlet extends HttpServlet {
 	 */
 	public EditComputerServlet() {
 		super();
+	}
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+				getServletContext());
 	}
 
 	/**

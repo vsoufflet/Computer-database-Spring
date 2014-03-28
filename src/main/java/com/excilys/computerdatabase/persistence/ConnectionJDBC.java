@@ -5,10 +5,12 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
+@Repository
 public class ConnectionJDBC {
 
 	private static String url = "jdbc:mysql://127.0.0.1:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
@@ -20,24 +22,6 @@ public class ConnectionJDBC {
 	static Logger logger = LoggerFactory.getLogger(ConnectionJDBC.class);
 
 	private static ThreadLocal<Connection> threadLocal = new ThreadLocal<Connection>();
-
-	private static ConnectionJDBC conn = new ConnectionJDBC();
-
-	public static CompanyDAO getCompanyDAO() {
-		return CompanyDAO.getInstance();
-	}
-
-	public static ComputerDAO getComputerDAO() {
-		return ComputerDAO.getInstance();
-	}
-
-	private ConnectionJDBC() {
-
-	}
-
-	public static ConnectionJDBC getInstance() {
-		return conn;
-	}
 
 	public BoneCP getConnectionPool() {
 		return connectionPool;
@@ -68,19 +52,19 @@ public class ConnectionJDBC {
 
 	public Connection getConnection() {
 		logger.info("retrieving connection from threadLocal");
+
 		try {
 			if (connectionPool == null) {
 				initialise();
 			}
 			if (threadLocal.get() == null) {
-				threadLocal.set(getInstance().getConnectionPool()
-						.getConnection());
+				threadLocal.set(getConnectionPool().getConnection());
 			}
+			logger.info("return connection");
 		} catch (SQLException e) {
-			logger.error("La connection n'a pas pu être établie.");
+			logger.error("Erreur lors de la connexion.");
 			e.printStackTrace();
 		}
-		logger.info("return connection");
 		return threadLocal.get();
 	}
 

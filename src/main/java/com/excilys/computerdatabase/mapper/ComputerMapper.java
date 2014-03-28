@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.domain.Company;
 import com.excilys.computerdatabase.domain.Computer;
@@ -12,16 +14,16 @@ import com.excilys.computerdatabase.domain.ComputerDTO;
 import com.excilys.computerdatabase.service.CompanyServiceImpl;
 import com.excilys.computerdatabase.service.ComputerServiceImpl;
 
+@Repository
 public class ComputerMapper {
 
-	ComputerServiceImpl myComputerService = ComputerServiceImpl.getInstance();
-	CompanyServiceImpl myCompanyService = CompanyServiceImpl.getInstance();
+	@Autowired
+	ComputerServiceImpl myComputerService;
+	@Autowired
+	CompanyServiceImpl myCompanyService;
 
-	Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
-
-	public ComputerMapper() {
-
-	}
+	private static Logger logger = LoggerFactory
+			.getLogger(ComputerMapper.class);
 
 	public Computer toComputer(ComputerDTO cDTO) {
 

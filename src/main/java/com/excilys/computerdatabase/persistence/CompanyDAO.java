@@ -8,20 +8,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.computerdatabase.domain.Company;
 
+@Repository
 public class CompanyDAO {
 
-	private static CompanyDAO myDAO = new CompanyDAO();
-	ConnectionJDBC connectionJDBC = ConnectionJDBC.getInstance();
-
-	private CompanyDAO() {
-
-	}
-
-	public static CompanyDAO getInstance() {
-		return myDAO;
-	}
+	@Autowired
+	ConnectionJDBC connectionJDBC;
 
 	public void create(Company c) throws SQLException {
 

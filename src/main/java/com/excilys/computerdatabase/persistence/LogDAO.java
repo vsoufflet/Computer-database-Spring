@@ -8,20 +8,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.computerdatabase.domain.Log;
 
+@Repository
 public class LogDAO {
 
-	private static LogDAO myLogDAO = new LogDAO();
-	ConnectionJDBC connectionJDBC = ConnectionJDBC.getInstance();
-
-	private LogDAO() {
-
-	}
-
-	public static LogDAO getInstance() {
-		return myLogDAO;
-	}
+	@Autowired
+	ConnectionJDBC connectionJDBC;
 
 	public void create(Log log) throws SQLException {
 

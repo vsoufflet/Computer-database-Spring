@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.domain.Company;
 import com.excilys.computerdatabase.domain.Log;
@@ -13,23 +15,17 @@ import com.excilys.computerdatabase.persistence.CompanyDAO;
 import com.excilys.computerdatabase.persistence.ConnectionJDBC;
 import com.excilys.computerdatabase.persistence.LogDAO;
 
+@Service
 public class CompanyServiceImpl implements CompanyServiceInterface {
-
-	private static CompanyServiceImpl myCompanyService = new CompanyServiceImpl();
-
-	CompanyDAO myCompanyDAO = CompanyDAO.getInstance();
-	LogDAO myLogDAO = LogDAO.getInstance();
-	ConnectionJDBC connectionJDBC = ConnectionJDBC.getInstance();
 
 	Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
 
-	private CompanyServiceImpl() {
-
-	}
-
-	public static CompanyServiceImpl getInstance() {
-		return myCompanyService;
-	}
+	@Autowired
+	CompanyDAO myCompanyDAO;
+	@Autowired
+	LogDAO myLogDAO;
+	@Autowired
+	ConnectionJDBC connectionJDBC;
 
 	@Override
 	public void create(Company c) {

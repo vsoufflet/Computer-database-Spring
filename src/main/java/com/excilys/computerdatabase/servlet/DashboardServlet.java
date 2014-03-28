@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.domain.Computer;
 import com.excilys.computerdatabase.domain.ComputerDTO;
@@ -26,15 +28,26 @@ import com.excilys.computerdatabase.service.ComputerServiceImpl;
 @WebServlet("/DashboardServlet")
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	ComputerServiceImpl computerService = ComputerServiceImpl.getInstance();
-	CompanyServiceImpl companyService = CompanyServiceImpl.getInstance();
-	ComputerMapper cm = new ComputerMapper();
+
+	@Autowired
+	ComputerServiceImpl computerService;
+	@Autowired
+	CompanyServiceImpl companyService;
+	@Autowired
+	ComputerMapper cm;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public DashboardServlet() {
 		super();
+	}
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+				getServletContext());
 	}
 
 	/**

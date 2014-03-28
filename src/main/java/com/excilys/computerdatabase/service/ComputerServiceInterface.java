@@ -4,11 +4,8 @@ import java.util.List;
 
 import com.excilys.computerdatabase.domain.Computer;
 import com.excilys.computerdatabase.domain.PageWrapper;
-import com.excilys.computerdatabase.persistence.ComputerDAO;
 
 public interface ComputerServiceInterface {
-
-	ComputerDAO myComputerDAO = ComputerDAO.getInstance();
 
 	public void create(Computer c);
 

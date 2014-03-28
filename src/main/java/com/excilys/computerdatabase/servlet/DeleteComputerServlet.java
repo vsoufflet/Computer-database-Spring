@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import com.excilys.computerdatabase.domain.Computer;
 import com.excilys.computerdatabase.domain.ComputerDTO;
 import com.excilys.computerdatabase.domain.PageWrapper;
@@ -23,15 +26,25 @@ import com.excilys.computerdatabase.service.ComputerServiceImpl;
 public class DeleteComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	ComputerServiceImpl computerService = ComputerServiceImpl.getInstance();
+	@Autowired
+	ComputerServiceImpl computerService;
+	@Autowired
+	ComputerMapper cm;
+
 	PageWrapper pw = new PageWrapper();
-	ComputerMapper cm = new ComputerMapper();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public DeleteComputerServlet() {
 		super();
+	}
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+				getServletContext());
 	}
 
 	/**

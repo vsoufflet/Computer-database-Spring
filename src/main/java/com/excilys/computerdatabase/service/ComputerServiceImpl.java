@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.domain.Computer;
 import com.excilys.computerdatabase.domain.Log;
@@ -14,23 +16,18 @@ import com.excilys.computerdatabase.persistence.ComputerDAO;
 import com.excilys.computerdatabase.persistence.ConnectionJDBC;
 import com.excilys.computerdatabase.persistence.LogDAO;
 
+@Service
 public class ComputerServiceImpl implements ComputerServiceInterface {
 
-	private static ComputerServiceImpl myComputerService = new ComputerServiceImpl();
+	private static Logger logger = LoggerFactory
+			.getLogger(ComputerServiceImpl.class);
 
-	ComputerDAO myComputerDAO = ComputerDAO.getInstance();
-	LogDAO myLogDAO = LogDAO.getInstance();
-	Logger logger = LoggerFactory.getLogger(ComputerServiceImpl.class);
-
-	ConnectionJDBC connectionJDBC = ConnectionJDBC.getInstance();
-
-	private ComputerServiceImpl() {
-
-	}
-
-	public static ComputerServiceImpl getInstance() {
-		return myComputerService;
-	}
+	@Autowired
+	ComputerDAO myComputerDAO;
+	@Autowired
+	LogDAO myLogDAO;
+	@Autowired
+	ConnectionJDBC connectionJDBC;
 
 	@Override
 	public void create(Computer c) {

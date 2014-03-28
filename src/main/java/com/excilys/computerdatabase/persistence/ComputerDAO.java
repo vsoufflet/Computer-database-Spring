@@ -8,25 +8,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.computerdatabase.domain.Company;
 import com.excilys.computerdatabase.domain.Computer;
 import com.excilys.computerdatabase.domain.PageWrapper;
 import com.excilys.computerdatabase.service.CompanyServiceImpl;
 
+@Repository
 public class ComputerDAO {
 
-	CompanyServiceImpl companyService = CompanyServiceImpl.getInstance();
-	ConnectionJDBC connectionJDBC = ConnectionJDBC.getInstance();
-
-	private static ComputerDAO myDAO = new ComputerDAO();
-
-	private ComputerDAO() {
-
-	}
-
-	public static ComputerDAO getInstance() {
-		return myDAO;
-	}
+	@Autowired
+	CompanyServiceImpl companyService;
+	@Autowired
+	ConnectionJDBC connectionJDBC;
 
 	public void create(Computer c) throws SQLException {
 
