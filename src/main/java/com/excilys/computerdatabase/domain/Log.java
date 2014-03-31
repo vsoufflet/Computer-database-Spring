@@ -2,6 +2,9 @@ package com.excilys.computerdatabase.domain;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Log {
 
 	private Long id;

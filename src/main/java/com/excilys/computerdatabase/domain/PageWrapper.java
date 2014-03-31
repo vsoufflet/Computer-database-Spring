@@ -2,6 +2,9 @@ package com.excilys.computerdatabase.domain;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PageWrapper {
 
 	private String search;

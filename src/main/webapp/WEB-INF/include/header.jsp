@@ -12,6 +12,6 @@
 <body>
 	<header class="topbar">
 		<h1 class="fill">
-			<a href="DashboardServlet"> Application - Computer Database </a>
+			<a href="dashboard"> Application - Computer Database </a>
 		</h1>
 	</header>

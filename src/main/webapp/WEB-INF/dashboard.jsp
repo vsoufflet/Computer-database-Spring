@@ -4,7 +4,7 @@
 <section id="main">
 	<h1 id="homeTitle">${NombreOrdinateurs}</h1>
 	<div id="actions">
-		<form action="DashboardServlet" method="GET">
+		<form action="/" method="GET">
 			<input type="search" id="searchbox" name="search"
 				placeholder="Search name"> 
 				
@@ -27,7 +27,7 @@
 				id="searchsubmit" value="Filter by name"></input>
 		</form>
 		
-		<a class="btn success" id="add" href="ListCompanyServlet">Add
+		<a class="btn success" id="add" href="getListForAdding">Add
 			Computer</a>
 	</div>
 
@@ -49,7 +49,7 @@
 
 			<c:forEach var="computerDTO" items="${PageWrapper.computerDTOList}">
 				<tr>
-					<td><a href="EditComputerServlet?name=${computerDTO.name}"><c:out
+					<td><a href="getListForEditing?name=${computerDTO.name}"><c:out
 								value="${computerDTO.name}" /></a></td>
 					<td>${computerDTO.introduced}</td>
 					<td>${computerDTO.discontinued}</td>
