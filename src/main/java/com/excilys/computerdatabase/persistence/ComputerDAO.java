@@ -33,9 +33,15 @@ public class ComputerDAO {
 		ps = conn.prepareStatement(query);
 
 		ps.setString(1, c.getName());
-		ps.setDate(2, new Date(c.getIntroduced().getTime()));
-		ps.setDate(3, new Date(c.getDiscontinued().getTime()));
-		ps.setObject(4, c.getCompany().getId());
+		if (c.getIntroduced() != null) {
+			ps.setDate(2, new Date(c.getIntroduced().getTime()));
+		}
+		if (c.getDiscontinued() != null) {
+			ps.setDate(3, new Date(c.getDiscontinued().getTime()));
+		}
+		if (c.getCompany() != null) {
+			ps.setObject(4, c.getCompany().getId());
+		}
 
 		ps.executeUpdate();
 

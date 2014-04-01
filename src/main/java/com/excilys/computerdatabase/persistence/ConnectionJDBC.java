@@ -29,7 +29,7 @@ public class ConnectionJDBC {
 
 	public static void initialise() {
 
-		logger.info("intialising connection pool");
+		logger.debug("intialising connection pool");
 		try {
 			Class.forName(driver);
 			BoneCPConfig config = new BoneCPConfig();
@@ -43,7 +43,7 @@ public class ConnectionJDBC {
 
 			connectionPool = new BoneCP(config);
 
-			logger.info("intialising connection pool initialised");
+			logger.debug("intialising connection pool initialised");
 		} catch (SQLException | ClassNotFoundException e) {
 			logger.error("Could not find the mysql driver");
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class ConnectionJDBC {
 	}
 
 	public Connection getConnection() {
-		logger.info("retrieving connection from threadLocal");
+		logger.debug("retrieving connection from threadLocal");
 
 		try {
 			if (connectionPool == null) {
@@ -60,7 +60,7 @@ public class ConnectionJDBC {
 			if (threadLocal.get() == null) {
 				threadLocal.set(getConnectionPool().getConnection());
 			}
-			logger.info("return connection");
+			logger.debug("return connection");
 		} catch (SQLException e) {
 			logger.error("Erreur lors de la connexion.");
 			e.printStackTrace();
@@ -68,9 +68,21 @@ public class ConnectionJDBC {
 		return threadLocal.get();
 	}
 
+	public Connection startConnection() {
+		logger.debug("starting connection.");
+		Connection conn = getConnection();
+		try {
+			conn.setAutoCommit(false);
+		} catch (SQLException e) {
+			logger.error("Failed to change AutoCommit value to false");
+			e.printStackTrace();
+		}
+		return conn;
+	}
+
 	public void close(Connection connection) {
 
-		logger.info("connection closing");
+		logger.debug("connection closing");
 		try {
 			if (threadLocal != null) {
 				threadLocal.remove();

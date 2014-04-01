@@ -32,10 +32,9 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 	@Override
 	public void create(Computer c) {
 
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 		try {
-			logger.info("computer creation -> started");
-			conn.setAutoCommit(false);
+			logger.debug("computer creation -> started");
 			Log log = Log.builder().type("Info")
 					.description("Creating computer. Name = " + c.getName())
 					.build();
@@ -54,19 +53,18 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("computer creation -> ended");
+		logger.debug("computer creation -> ended");
 	}
 
 	@Override
 	public Computer retrieveByName(String name) {
 		Computer computer = null;
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("computer retrievement by name -> started");
-			conn.setAutoCommit(false);
+			logger.debug("computer retrievement by name -> started");
 			computer = myComputerDAO.retrieveByName(name);
 			Log log = Log
 					.builder()
@@ -88,20 +86,19 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("computer retrievement by name-> ended");
+		logger.debug("computer retrievement by name-> ended");
 		return computer;
 	}
 
 	@Override
 	public Computer retrieveById(Long id) {
 		Computer computer = null;
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("computer retrievement by id-> started");
-			conn.setAutoCommit(false);
+			logger.debug("computer retrievement by id-> started");
 			computer = myComputerDAO.retrieveById(id);
 			Log log = Log.builder().type("Info")
 					.description("Looking for computer n° " + computer.getId())
@@ -119,20 +116,19 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("computerlist retrievement by id-> ended");
+		logger.debug("computerlist retrievement by id-> ended");
 		return computer;
 	}
 
 	@Override
 	public List<Computer> retrieveList(PageWrapper pw) {
 		List<Computer> computerList = null;
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("computerlist retrievement -> started");
-			conn.setAutoCommit(false);
+			logger.debug("computerlist retrievement -> started");
 			computerList = myComputerDAO.retrieveAll(pw);
 			Log log = Log.builder().type("Info")
 					.description("Looking for the whole computer list").build();
@@ -148,20 +144,19 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("computerlist retrievement -> ended");
+		logger.debug("computerlist retrievement -> ended");
 		return computerList;
 	}
 
 	@Override
 	public List<Computer> retrieveListByCompany(PageWrapper pw) {
 		List<Computer> computerList = null;
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("computerlist retrievement by Company-> started");
-			conn.setAutoCommit(false);
+			logger.debug("computerlist retrievement by Company-> started");
 			computerList = myComputerDAO.retrieveAllByCompany(pw);
 			Log log = Log
 					.builder()
@@ -181,19 +176,18 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("computerlist retrievement -> ended");
+		logger.debug("computerlist retrievement -> ended");
 		return computerList;
 	}
 
 	@Override
 	public void delete(Computer c) {
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("computerlist deleting -> started");
-			conn.setAutoCommit(false);
+			logger.debug("computerlist deleting -> started");
 			myComputerDAO.delete(c);
 			Log log = Log.builder().type("Info")
 					.description("Deleting computer n° ").build();
@@ -209,9 +203,9 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("computerlist deleting -> endeded");
+		logger.debug("computerlist deleting -> endeded");
 	}
 
 }

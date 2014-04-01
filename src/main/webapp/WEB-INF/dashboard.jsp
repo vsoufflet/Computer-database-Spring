@@ -4,7 +4,7 @@
 <section id="main">
 	<h1 id="homeTitle">${NombreOrdinateurs}</h1>
 	<div id="actions">
-		<form action="/" method="GET">
+		<form action="dashboard" method="GET">
 			<input type="search" id="searchbox" name="search"
 				placeholder="Search name"> 
 				
@@ -49,13 +49,13 @@
 
 			<c:forEach var="computerDTO" items="${PageWrapper.computerDTOList}">
 				<tr>
-					<td><a href="getListForEditing?name=${computerDTO.name}"><c:out
+					<td><a href="edit?name=${computerDTO.name}"><c:out
 								value="${computerDTO.name}" /></a></td>
 					<td>${computerDTO.introduced}</td>
 					<td>${computerDTO.discontinued}</td>
 					<td>${computerDTO.company}</td>
 					<td><a class="btn danger" id="Delete"
-						href="DeleteComputerServlet?id=${computerDTO.id}">Delete Computer</a></td>
+						href="delete?id=${computerDTO.id}">Delete Computer</a></td>
 				</tr>
 			</c:forEach>
 

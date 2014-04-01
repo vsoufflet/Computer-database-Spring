@@ -1,10 +1,15 @@
 package com.excilys.computerdatabase.domain;
 
+import javax.validation.constraints.NotNull;
+
 public class ComputerDTO {
 
 	private Long id;
+	@NotNull
 	private String name;
+	@DateFormat
 	private String introduced;
+	@DateFormat
 	private String discontinued;
 	private String company;
 	private Long companyId;

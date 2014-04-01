@@ -29,11 +29,10 @@ public class CompanyServiceImpl implements CompanyServiceInterface {
 
 	@Override
 	public void create(Company c) {
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("company creation -> started");
-			conn.setAutoCommit(false);
+			logger.debug("company creation -> started");
 			myCompanyDAO.create(c);
 			Log log = Log.builder().type("Info")
 					.description("Creating company. Name = " + c.getName())
@@ -50,19 +49,18 @@ public class CompanyServiceImpl implements CompanyServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("company creation -> ended");
+		logger.debug("company creation -> ended");
 	}
 
 	@Override
 	public Company retrieveById(Long id) {
 		Company company = null;
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("company retrievement by id-> started");
-			conn.setAutoCommit(false);
+			logger.debug("company retrievement by id-> started");
 			company = myCompanyDAO.retrieveById(id);
 			Log log = Log.builder().type("Info")
 					.description("Looking for company n° " + id).build();
@@ -78,20 +76,19 @@ public class CompanyServiceImpl implements CompanyServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("company retrievement by id-> ended");
+		logger.debug("company retrievement by id-> ended");
 		return company;
 	}
 
 	@Override
 	public List<Company> retrieveList() {
 		List<Company> companyList = null;
-		Connection conn = connectionJDBC.getConnection();
+		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.info("companyList retrievement -> started");
-			conn.setAutoCommit(false);
+			logger.debug("companyList retrievement -> started");
 			companyList = myCompanyDAO.retrieveList();
 			Log log = Log.builder().type("Info")
 					.description("Looking for the whole company list").build();
@@ -107,9 +104,9 @@ public class CompanyServiceImpl implements CompanyServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			// connectionJDBC.close(conn);
+			connectionJDBC.close(conn);
 		}
-		logger.info("companyList retrievement -> ended");
+		logger.debug("companyList retrievement -> ended");
 		return companyList;
 	}
 }

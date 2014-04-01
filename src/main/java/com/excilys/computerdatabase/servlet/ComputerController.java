@@ -3,15 +3,20 @@ package com.excilys.computerdatabase.servlet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.excilys.computerdatabase.domain.Company;
 import com.excilys.computerdatabase.domain.Computer;
 import com.excilys.computerdatabase.domain.ComputerDTO;
 import com.excilys.computerdatabase.domain.ComputerValidator;
@@ -47,7 +52,7 @@ public class ComputerController {
 			@RequestParam(value = "orderBy", required = false, defaultValue = "default") String orderBy,
 			@RequestParam(value = "way", required = false, defaultValue = "default") String way) {
 
-		logger.info("Entering DisplayList");
+		logger.debug("Entering DisplayList");
 
 		List<ComputerDTO> computerDTOList = new ArrayList<ComputerDTO>();
 		List<Computer> computerList = new ArrayList<Computer>();
@@ -92,19 +97,20 @@ public class ComputerController {
 			model.addAttribute("NombreOrdinateurs", computerDTOList.size()
 					+ " computers found");
 		}
-		logger.info("Exiting DisplayList");
+		logger.debug("Exiting DisplayList");
 
 		return "dashboard";
 	}
 
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/addComputer", method = RequestMethod.POST)
 	public String Add(
+			@ModelAttribute("computerDTO") @Valid ComputerDTO computerDTO,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "introducedDate", required = false) String introduced,
 			@RequestParam(value = "discontinuedDate", required = false) String discontinued,
 			@RequestParam(value = "company", required = false) Long companyId) {
 
-		logger.info("Entering Add");
+		logger.debug("Entering Add");
 
 		ComputerDTO cDTO = new ComputerDTO();
 		cDTO.setName(name);
@@ -115,8 +121,6 @@ public class ComputerController {
 		Computer computer = cm.toComputer(cDTO);
 
 		/*
-		 * boolean valid = cv.validate(computer);
-		 * 
 		 * if (valid == true) { computerService.create(computer);
 		 * request.setAttribute("success",
 		 * "L'ordinateur a été ajouté avec succès."); } else {
@@ -124,40 +128,31 @@ public class ComputerController {
 		 * "Une erreur est survenue, l'ordinateur n'a pas pu être ajouté. Merci de vérifier les données insérées."
 		 * ); }
 		 */
-
 		computerService.create(computer);
 
-		logger.info("Exiting Add");
+		logger.debug("Exiting Add");
 
-		return "getCompanyListForAdding";
+		return "redirect:/dashboard";
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String Edit(Model model,
+	public ModelAndView Edit(ModelAndView mAndV,
 			@RequestParam(value = "name", required = false) String name) {
 
-		logger.info("Entering Edit");
+		logger.debug("Entering Edit");
+
+		List<Company> companyList = companyService.retrieveList();
 
 		Computer computer = computerService.retrieveByName(name);
 		ComputerDTO computerDTO = cm.toComputerDTO(computer);
-		model.addAttribute("computer", computer);
 
-		if (computer.getName() != null) {
-			model.addAttribute("name", computerDTO.getName());
-		}
-		if (computer.getIntroduced() != null) {
-			model.addAttribute("introduced", computerDTO.getIntroduced());
-		}
-		if (computer.getDiscontinued() != null) {
-			model.addAttribute("discontinued", computerDTO.getDiscontinued());
-		}
-		if (computer.getCompany() != null) {
-			model.addAttribute("companyId", computer.getCompany().getId());
-			model.addAttribute("companyName", computer.getCompany().getName());
-		}
-		logger.info("Exiting Edit");
+		mAndV.addObject("computerDTO", computerDTO);
+		mAndV.addObject("companyList", companyList);
+		mAndV.setViewName("editComputer");
 
-		return "getCompanyListForEditing";
+		logger.debug("Exiting Edit");
+
+		return mAndV;
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -169,7 +164,7 @@ public class ComputerController {
 			@RequestParam(value = "way", required = false) String way,
 			@RequestParam(value = "id", required = false) Long id) {
 
-		logger.info("Entering Delete");
+		logger.debug("Entering Delete");
 
 		List<ComputerDTO> computerDTOList = new ArrayList<ComputerDTO>();
 		List<Computer> computerList = new ArrayList<Computer>();
@@ -187,8 +182,18 @@ public class ComputerController {
 		}
 		pw = PageWrapper.builder().computerDTOList(computerDTOList).build();
 
-		logger.info("Exiting Delete");
+		logger.debug("Exiting Delete");
 
 		return "dashboard";
+	}
+
+	@RequestMapping(value = "getListForAdding", method = RequestMethod.GET)
+	public ModelAndView getListForAdding(ModelAndView mAndV) {
+
+		List<Company> companyList = companyService.retrieveList();
+
+		mAndV.addObject("companyList", companyList);
+		mAndV.setViewName("addComputer");
+		return mAndV;
 	}
 }
