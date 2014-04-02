@@ -9,9 +9,9 @@ public interface ComputerServiceInterface {
 
 	public void create(Computer c);
 
-	public Computer retrieveByName(String name);
-
 	public Computer retrieveById(Long id);
+
+	public void update(Computer c);
 
 	public List<Computer> retrieveList(PageWrapper pw);
 

@@ -26,52 +26,43 @@ public class ComputerDAO {
 
 	public void create(Computer c) throws SQLException {
 
+		// TODO: rewrite create() method!!!
 		Connection conn = connectionJDBC.getConnection();
 		PreparedStatement ps = null;
+		StringBuilder query = new StringBuilder("INSERT INTO computer ");
 
-		String query = "INSERT into computer (name,introduced,discontinued,company_id) VALUES(?,?,?,?)";
-		ps = conn.prepareStatement(query);
-
-		ps.setString(1, c.getName());
 		if (c.getIntroduced() != null) {
-			ps.setDate(2, new Date(c.getIntroduced().getTime()));
-		}
-		if (c.getDiscontinued() != null) {
-			ps.setDate(3, new Date(c.getDiscontinued().getTime()));
-		}
-		if (c.getCompany() != null) {
-			ps.setObject(4, c.getCompany().getId());
+			if (c.getDiscontinued() != null) {
+				if (c.getCompany() != null) {
+					query.append("(name, introduced, discontinued, company_id) VALUES(?,?,?,?)");
+				} else {
+					query.append("(name, introduced, discontinued) VALUES(?,?,?) WHERE id=?");
+				}
+			} else {
+				query.append("(name, introduced) VALUES(?,?) WHERE id=?");
+			}
+		} else {
+			query.append("(name) VALUES(?) WHERE id=?");
 		}
 
+		ps = conn.prepareStatement(query.toString());
+
+		if (c.getIntroduced() != null) {
+			if (c.getDiscontinued() != null) {
+				if (c.getCompany() != null) {
+					ps.setLong(4, c.getCompany().getId());
+				} else {
+					ps.setDate(3, new Date(c.getDiscontinued().getTime()));
+				}
+			} else {
+				ps.setDate(2, new Date(c.getIntroduced().getTime()));
+			}
+		} else {
+			ps.setString(1, c.getName());
+		}
 		ps.executeUpdate();
 
 		ps.close();
-	}
-
-	public Computer retrieveByName(String name) throws SQLException {
-
-		Connection conn = connectionJDBC.getConnection();
-		PreparedStatement ps = null;
-		String query = "SELECT * FROM computer WHERE name=?";
-		ResultSet rs = null;
-		Computer computer = new Computer();
-
-		ps = conn.prepareStatement(query);
-		ps.setString(1, name);
-		rs = ps.executeQuery();
-
-		rs.next();
-		computer.setId(rs.getLong(1));
-		computer.setName(rs.getString(2));
-		computer.setIntroduced(rs.getDate(3));
-		computer.setDiscontinued(rs.getDate(4));
-
-		Company company = companyService.retrieveById(rs.getLong(5));
-		computer.setCompany(company);
-
-		rs.close();
-		ps.close();
-		return computer;
 	}
 
 	public Computer retrieveById(Long id) throws SQLException {
@@ -97,6 +88,51 @@ public class ComputerDAO {
 		rs.close();
 		ps.close();
 		return computer;
+	}
+
+	public void update(Computer c) throws SQLException {
+
+		// TODO: rewrite update() method!!!
+		Connection conn = connectionJDBC.getConnection();
+		PreparedStatement ps = null;
+		StringBuilder query = new StringBuilder("UPDATE computer SET ");
+
+		if (c.getIntroduced() != null) {
+			if (c.getDiscontinued() != null) {
+				if (c.getCompany() != null) {
+					query.append("(name, introduced, discontinued, company_id) VALUES(?,?,?,?) WHERE id=?");
+				} else {
+					query.append("(name, introduced, discontinued) VALUES(?,?,?) WHERE id=?");
+				}
+			} else {
+				query.append("(name, introduced) VALUES(?,?) WHERE id=?");
+			}
+		} else {
+			query.append("(name) VALUES(?) WHERE id=?");
+		}
+
+		ps = conn.prepareStatement(query.toString());
+
+		if (c.getIntroduced() != null) {
+			if (c.getDiscontinued() != null) {
+				if (c.getCompany() != null) {
+					ps.setLong(4, c.getCompany().getId());
+					ps.setLong(5, c.getId());
+				} else {
+					ps.setDate(3, new Date(c.getDiscontinued().getTime()));
+					ps.setLong(4, c.getId());
+				}
+			} else {
+				ps.setDate(2, new Date(c.getIntroduced().getTime()));
+				ps.setLong(3, c.getId());
+			}
+		} else {
+			ps.setString(1, c.getName());
+			ps.setLong(2, c.getId());
+		}
+		ps.executeUpdate();
+
+		ps.close();
 	}
 
 	public void delete(Computer c) throws SQLException {

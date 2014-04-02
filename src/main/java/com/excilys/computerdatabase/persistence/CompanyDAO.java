@@ -36,16 +36,33 @@ public class CompanyDAO {
 
 	public Company retrieveById(Long id) throws SQLException {
 
-		List<Company> companyList = retrieveList();
+		Connection conn = connectionJDBC.getConnection();
+		PreparedStatement ps = null;
+		String query = "SELECT * FROM company WHERE id=?";
+		ResultSet rs = null;
+		Company company = new Company();
 
-		for (Company c : companyList) {
-			if (id == c.getId()) {
-				Company company = c;
-				return company;
-			}
+		ps = conn.prepareStatement(query);
+		ps.setLong(1, id);
+		rs = ps.executeQuery();
+
+		while (rs.next()) {
+			company.setId(rs.getLong(1));
+			company.setName(rs.getString(2));
 		}
-		return null;
+		rs.close();
+		ps.close();
+		return company;
 	}
+
+	/*
+	 * List<Company> companyList = retrieveList();
+	 * 
+	 * for (Company c : companyList) { if (id == c.getId()) { Company company =
+	 * c; return company; } }
+	 * 
+	 * return null; }
+	 */
 
 	public List<Company> retrieveList() throws SQLException {
 

@@ -49,7 +49,7 @@ public class CompanyServiceImpl implements CompanyServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
 		logger.debug("company creation -> ended");
 	}
@@ -76,7 +76,7 @@ public class CompanyServiceImpl implements CompanyServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
 		logger.debug("company retrievement by id-> ended");
 		return company;
@@ -104,7 +104,7 @@ public class CompanyServiceImpl implements CompanyServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
 		logger.debug("companyList retrievement -> ended");
 		return companyList;

@@ -53,43 +53,9 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
 		logger.debug("computer creation -> ended");
-	}
-
-	@Override
-	public Computer retrieveByName(String name) {
-		Computer computer = null;
-		Connection conn = connectionJDBC.startConnection();
-
-		try {
-			logger.debug("computer retrievement by name -> started");
-			computer = myComputerDAO.retrieveByName(name);
-			Log log = Log
-					.builder()
-					.type("Info")
-					.description(
-							"Looking for computer which name is "
-									+ computer.getName()).build();
-			myLogDAO.create(log);
-
-			conn.commit();
-
-		} catch (SQLException e) {
-			logger.error("Erreur de connexion. Voir ComputerDAO->retrieveByName()");
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				logger.error("Could not rollback.");
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		} finally {
-			connectionJDBC.close(conn);
-		}
-		logger.debug("computer retrievement by name-> ended");
-		return computer;
 	}
 
 	@Override
@@ -116,10 +82,36 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
 		logger.debug("computerlist retrievement by id-> ended");
 		return computer;
+	}
+
+	@Override
+	public void update(Computer c) {
+		Connection conn = connectionJDBC.startConnection();
+
+		try {
+			logger.debug("computer updating -> started");
+			myComputerDAO.update(c);
+			Log log = Log.builder().type("Info")
+					.description("Updating computer n° ").build();
+			myLogDAO.create(log);
+			conn.commit();
+		} catch (SQLException e) {
+			logger.error("Erreur de connexion. Voir ComputerDAO->update()");
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				logger.error("Could not rollback.");
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			// connectionJDBC.close(conn);
+		}
+		logger.debug("computer updating -> endeded");
 	}
 
 	@Override
@@ -144,7 +136,7 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
 		logger.debug("computerlist retrievement -> ended");
 		return computerList;
@@ -176,7 +168,7 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
 		logger.debug("computerlist retrievement -> ended");
 		return computerList;
@@ -187,7 +179,7 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 		Connection conn = connectionJDBC.startConnection();
 
 		try {
-			logger.debug("computerlist deleting -> started");
+			logger.debug("computer deleting -> started");
 			myComputerDAO.delete(c);
 			Log log = Log.builder().type("Info")
 					.description("Deleting computer n° ").build();
@@ -203,9 +195,8 @@ public class ComputerServiceImpl implements ComputerServiceInterface {
 			}
 			e.printStackTrace();
 		} finally {
-			connectionJDBC.close(conn);
+			// connectionJDBC.close(conn);
 		}
-		logger.debug("computerlist deleting -> endeded");
+		logger.debug("computer deleting -> endeded");
 	}
-
 }
