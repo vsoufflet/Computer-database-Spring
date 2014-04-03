@@ -11,9 +11,12 @@
 <link href="css/main.css" rel="stylesheet" media="screen">
 </head>
 <body>
-	<header class="topbar">
-		<h1 class="fill">
-			<a href="dashboard"> <spring:message code="dashboardTitle"/> </a>
-		</h1>
-		Language <a href="?lang=en">English</a> | <a href="?lang=fr">Français</a>
-	</header>
+	<form>
+		<header class="topbar">
+			<h1 class="fill">
+				<a href="dashboard"> <spring:message code="dashboardTitle"/>
+				</a>
+			</h1>
+			Language <a href="?language=en">English</a> | <a href="?language=fr">Français</a>
+		</header>
+	</form>

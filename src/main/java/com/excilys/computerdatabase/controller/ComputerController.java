@@ -32,9 +32,14 @@ public class ComputerController {
 	 * 
 	 */
 
+	// TODO: rewrite ComputerDAO create() method
+	// TODO: rewrite ComputerDAO update() method
 	// TODO: complete mvc pagination
-	// TODO: complete name and dates validation, for add and edit features
+	// TODO: complete name and dates validation, for add and edit features;
+	// Think about tags
 	// TODO: sort transactions errors
+	// TODO: complete internationalization by adapting date validator to each
+	// language
 	@Autowired
 	private ComputerServiceImpl computerService;
 	@Autowired
@@ -48,9 +53,8 @@ public class ComputerController {
 	private static Logger logger = LoggerFactory
 			.getLogger(ComputerController.class);
 
-	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-	public String displayList(
-			Model model,
+	@RequestMapping(value = "dashboard", method = RequestMethod.GET)
+	public ModelAndView displayList(
 			@RequestParam(value = "searchBy", required = false, defaultValue = "default") String searchBy,
 			@RequestParam(value = "search", required = false, defaultValue = "default") String search,
 			@RequestParam(value = "orderBy", required = false, defaultValue = "default") String orderBy,
@@ -90,21 +94,23 @@ public class ComputerController {
 			ComputerDTO computerDTO = cm.toComputerDTO(c);
 			computerDTOList.add(computerDTO);
 		}
-
+		ModelAndView model = new ModelAndView();
 		pw.setComputerDTOList(computerDTOList);
-		model.addAttribute("PageWrapper", pw);
+		model.addObject("PageWrapper", pw);
 
 		if (computerDTOList.size() <= 1) {
-			model.addAttribute("NombreOrdinateurs", computerDTOList.size());
+			model.addObject("NombreOrdinateurs", computerDTOList.size());
 		} else {
-			model.addAttribute("NombreOrdinateurs", computerDTOList.size());
+			model.addObject("NombreOrdinateurs", computerDTOList.size());
 		}
+		model.setViewName("dashboard");
+
 		logger.debug("Exiting displayList");
 
-		return "dashboard";
+		return model;
 	}
 
-	@RequestMapping(value = "/addComputerForm", method = RequestMethod.GET)
+	@RequestMapping(value = "addComputerForm", method = RequestMethod.GET)
 	public ModelAndView addComputerForm(ModelAndView mAndV) {
 
 		List<Company> companyList = companyService.retrieveList();
@@ -116,7 +122,7 @@ public class ComputerController {
 		return mAndV;
 	}
 
-	@RequestMapping(value = "/addComputer", method = RequestMethod.POST)
+	@RequestMapping(value = "addComputer", method = RequestMethod.POST)
 	public String add(
 			@ModelAttribute("computerDTO") @Valid ComputerDTO cDTO,
 			BindingResult result,
@@ -149,7 +155,7 @@ public class ComputerController {
 		}
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	@RequestMapping(value = "edit", method = RequestMethod.GET)
 	public ModelAndView edit(ModelAndView mAndV,
 			@RequestParam(value = "id", required = true) Long id) {
 
@@ -165,7 +171,7 @@ public class ComputerController {
 		return mAndV;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(
 			ModelAndView mAndV,
 			@ModelAttribute("computerDTO") @Valid ComputerDTO computerDTO,
@@ -200,7 +206,7 @@ public class ComputerController {
 		}
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	@RequestMapping(value = "delete", method = RequestMethod.GET)
 	public String delete(
 			Model model,
 			@RequestParam(value = "searchBy", required = false, defaultValue = "default") String searchBy,

@@ -26,7 +26,6 @@ public class ComputerDAO {
 
 	public void create(Computer c) throws SQLException {
 
-		// TODO: rewrite create() method!!!
 		Connection conn = connectionJDBC.getConnection();
 		PreparedStatement ps = null;
 		StringBuilder query = new StringBuilder("INSERT INTO computer ");
@@ -92,7 +91,6 @@ public class ComputerDAO {
 
 	public void update(Computer c) throws SQLException {
 
-		// TODO: rewrite update() method!!!
 		Connection conn = connectionJDBC.getConnection();
 		PreparedStatement ps = null;
 		StringBuilder query = new StringBuilder("UPDATE computer SET ");
