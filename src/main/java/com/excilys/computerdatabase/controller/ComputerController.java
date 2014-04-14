@@ -23,8 +23,8 @@ import com.excilys.computerdatabase.domain.ComputerDTO;
 import com.excilys.computerdatabase.domain.ComputerValidator;
 import com.excilys.computerdatabase.domain.PageWrapper;
 import com.excilys.computerdatabase.mapper.ComputerMapper;
-import com.excilys.computerdatabase.service.CompanyServiceImpl;
-import com.excilys.computerdatabase.service.ComputerServiceImpl;
+import com.excilys.computerdatabase.service.CompanyService;
+import com.excilys.computerdatabase.service.ComputerService;
 
 @Controller
 public class ComputerController {
@@ -32,18 +32,19 @@ public class ComputerController {
 	 * 
 	 */
 
-	// TODO: rewrite ComputerDAO create() method
-	// TODO: rewrite ComputerDAO update() method
+	// TODO: sort update() method while updating existing dates to empty dates
+	// TODO: sort search by company to also have the empty ones
 	// TODO: complete mvc pagination
 	// TODO: complete name and dates validation, for add and edit features;
 	// Think about tags
 	// TODO: sort transactions errors
 	// TODO: complete internationalization by adapting date validator to each
 	// language
+
 	@Autowired
-	private ComputerServiceImpl computerService;
+	private ComputerService computerService;
 	@Autowired
-	private CompanyServiceImpl companyService;
+	private CompanyService companyService;
 	@Autowired
 	private ComputerMapper cm;
 	@Autowired
@@ -90,9 +91,11 @@ public class ComputerController {
 			}
 		}
 
-		for (Computer c : computerList) {
-			ComputerDTO computerDTO = cm.toComputerDTO(c);
-			computerDTOList.add(computerDTO);
+		if (computerList != null) {
+			for (Computer c : computerList) {
+				ComputerDTO computerDTO = cm.toComputerDTO(c);
+				computerDTOList.add(computerDTO);
+			}
 		}
 		ModelAndView model = new ModelAndView();
 		pw.setComputerDTOList(computerDTOList);
@@ -123,26 +126,10 @@ public class ComputerController {
 	}
 
 	@RequestMapping(value = "addComputer", method = RequestMethod.POST)
-	public String add(
-			@ModelAttribute("computerDTO") @Valid ComputerDTO cDTO,
-			BindingResult result,
-			@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "introduced", required = false) String introduced,
-			@RequestParam(value = "discontinued", required = false) String discontinued,
-			@RequestParam(value = "company", required = false) Long companyId) {
+	public String add(@ModelAttribute("computerDTO") @Valid ComputerDTO cDTO,
+			BindingResult result) {
 
 		logger.debug("Entering add");
-
-		cDTO.setName(name);
-		if (introduced != null) {
-			cDTO.setIntroduced(introduced);
-		}
-		if (discontinued != null) {
-			cDTO.setDiscontinued(discontinued);
-		}
-		if (companyId != 0) {
-			cDTO.setCompanyId(companyId);
-		}
 
 		if (!result.hasErrors()) {
 			Computer computer = cm.toComputer(cDTO);
@@ -172,33 +159,17 @@ public class ComputerController {
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(
-			ModelAndView mAndV,
+	public String update(ModelAndView mAndV,
 			@ModelAttribute("computerDTO") @Valid ComputerDTO computerDTO,
-			BindingResult result,
-			@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "introduced", required = false) String introduced,
-			@RequestParam(value = "discontinued", required = false) String discontinued,
-			@RequestParam(value = "companyId", required = false) Long companyId) {
+			BindingResult result) {
 
 		logger.debug("Entering update");
-
-		computerDTO.setName(name);
-		if (introduced != null) {
-			computerDTO.setIntroduced(introduced);
-		}
-		if (discontinued != null) {
-			computerDTO.setDiscontinued(discontinued);
-		}
-		if (companyId != 0) {
-			computerDTO.setCompanyId(companyId);
-		}
 
 		if (!result.hasErrors()) {
 			Computer computer = cm.toComputer(computerDTO);
 			computerService.update(computer);
 			logger.debug("Exiting update");
-			return "dashboard";
+			return "redirect:/dashboard";
 
 		} else {
 			mAndV.addObject("id", computerDTO.getId());

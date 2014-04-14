@@ -20,7 +20,7 @@ public class ComputerValidator implements
 	@Override
 	public boolean isValid(String fullDate, ConstraintValidatorContext context) {
 
-		boolean validDate = false;
+		boolean validDate;
 		String[] date = fullDate.split("/");
 
 		if (fullDate.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")
@@ -31,9 +31,11 @@ public class ComputerValidator implements
 					validDate = true;
 				} else {
 					logger.debug("31 jours par mois maximum");
+					validDate = false;
 				}
 			} else {
 				logger.debug("12 mois par an maximum");
+				validDate = false;
 			}
 		} else {
 			logger.error("Format 'introduced' incorrect");
